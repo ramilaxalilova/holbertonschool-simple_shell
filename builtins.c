@@ -1,6 +1,26 @@
 #include "shell.h"
 
 #define SETOWD(V) (V = _strdup(_getenv("OLDPWD")))
+
+/**
+ * display_env - Displays the current environment variables
+ * @data: Pointer to the sh_t structure
+ *
+ * Return: Always returns SUCCESS (1)
+ */
+
+int display_env(sh_t *data)
+{
+	int i = 0;
+	 while (environ[i] != NULL)
+	 {
+		 PRINT(environ[i]);
+		 PRINT("\n");
+		 i++;
+	 }
+	 return (SUCCESS);
+}
+
 /**
  * change_dir - changes directory
  * @data: a pointer to the data structure
@@ -116,15 +136,15 @@ int handle_builtin(sh_t *data)
 		{"exit", abort_prg},
 		{"cd", change_dir},
 		{"help", display_help},
+		{"env", display_env},
 		{NULL, NULL}
 	};
-	int i = 0;
+	int i;
 
-	while ((blt + i)->cmd)
+	for (i = 0; builtins[i].cmd != NULL; i++)
 	{
-		if (_strcmp(data->args[0], (blt + i)->cmd) == 0)
-			return ((blt + i)->f(data));
-		i++;
+		if (_strcmp(data->args[0], builtins[i].cmd) == 0)
+			return builtins[i].f(data);
 	}
 	return (FAIL);
 }
