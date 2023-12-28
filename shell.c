@@ -45,5 +45,5 @@ int main(int argc __attribute__((unused)),
 		free(input_stdin);
 		free(args);
 	}
-	return (0);
+	return (status_return);
 }
