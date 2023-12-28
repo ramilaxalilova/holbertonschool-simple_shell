@@ -19,7 +19,7 @@ int hsh_execute(char **args, char **argv, int *exit_status)
 	/* check if PATH exists and can be accessed, also tokenize PATH */
 	new_args = validate_input(args, argv);
 	if (strcmp(new_args, "Fail access") == 0)
-		return (0);
+		return (1);
 	pid = fork();
 	/* create a duplicate process (child) */
 	if (pid == 0) /* current process is child process */
@@ -35,7 +35,7 @@ int hsh_execute(char **args, char **argv, int *exit_status)
 	{
 		perror("Error forking");
 		free(new_args);
-		return (0);
+		return (1);
 	}
 	else
 	/* safety net if fork() failed to created a child process or execve fails */
