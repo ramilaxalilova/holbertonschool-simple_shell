@@ -1,57 +1,94 @@
-.TH HSH 1
-.SH NAME
-hsh \- Holbertonschool Shell	
-.SH SYNOPSIS
-.B hsh
-[command] [options ...]
-.SH COPYRIGHT
-hsh \- is a holberton school first trimester project
-.SH DESCRIPTION
-.B hsh
-is a shell command interpreter that executes command read from the standard input or from file.
-.B hsh
-is intend to be a clone of the standard command interpreter of 
-.B Unix
-and 
-.B Unix-like
-system.
-.SH OPTIONS
-A  simple command is a sequence of optional variable assignments followed by blank-separated words and redirections, 
-and terminated by a control operator.  The first word specifies the command to be
-executed, and is passed as argument zero.  The remaining words are passed as arguments to the invoked command.
-.PP
-The return value of a simple command is its exit status, or 128+n if the command is terminated by signal n.
-.SS
-Piplines
-A pipeline is a sequence of one or more commands separated by one of the control operators | or |&.  The format for a pipeline is:
-.PP
-[command [..ARGS]] [| - |&] [command2 [..ARGS]]
-.PP
-The standard output of command is connected via a pipe to the standard input of command2.  This connection is performed before any redirections specified by the command (see REDIRECTION below).   If
-|&  is  used,  command's standard error, in addition to its standard output, is connected to command2's standard input through the pipe; it is shorthand for 2>&1 |.  This implicit redirection of the
-standard error to the standard output is performed after any redirections specified by the command.
-.SS Lists
+.TH SIMPLE_SHELL "General Commands Manual"
 
-A list is a sequence of one or more pipelines separated by one of the operators ;, &, &&, or ||, and optionally terminated by one of ;, &, or <newline>.
-Of these list operators, && and || have equal precedence, followed by ; and &, which have equal precedence.
-A sequence of one or more newlines may appear in a list instead of a semicolon to delimit commands.
-.PP
-If  a command is terminated by the control operator &, the shell executes the command in the background in a subshell.  The shell does not wait for the command to finish, and the return status is 0.
-Commands separated by a ; are executed sequentially; the shell waits for each command to terminate in turn.  The return status is the exit status of the last command executed.
-AND and OR lists are sequences of one or more pipelines separated by the && and || control operators, respectively.  AND and OR lists are executed with left associativity.  An AND list has the form
-.PP
-command1 && command2
-.PP
-command2 is executed if, and only if, command1 returns an exit status of zero.
-.PP
-An OR list has the form:
-.PP
-command1 || command2
-.PP
-command2 is executed if and only if command1 returns a non-zero exit status.  The return status of AND and OR lists is the exit status of the last command executed in the list.
+.SH NAME
+.B hsh\fR \- A simple command interpreter (simple_shell)
+
+.SH SYNOPSIS
+.B ./hsh
+.P
+.B [command] [option]
+.P
+.B./hsh\fR [options] [command] | file
+.P
+.B /bin/[command] [option]
+.SH DESCRIPTION
+.LP
+.B hsh\fR is a simple UNIX command language interpreter capable of executing commands interactivly from \fBSTDIN\fR
+or piped from a file
+
+Invocation
+.P
+hsh  can  be invoked both interactively and non-interactively.
+If hsh is invoked with standard input not connected to a terminal, it reads and executes received commands in order.
+If hsh is invoked with standard input connected to a terminal (determined by isatty(3)), an interactive shell is opened.  When executing interactively, hsh displays the prompt "$ " when it is ready to read a command.
+Alternatively, if command line arguments are supplied upon invocation, hsh treats the first argument as a file from which to read commands.
+The supplied file should contain one command per line.  hsh runs each of the commands contained in the file  in  order  before exiting.
+
+Environment
+Upon invocation, hsh receives and copies the environment of the parent process in which it was exeucted.  This environment is an array of name-value strings describing variables in the format NAME=VALUE.
+
+Command Execution
+.P
+After receiving a command, hsh tokenizes it into words using " " as a delimiter. The first word is considered the command and all remaining words are considered arguments to that command.  hsh then proceeds with the following actions:
+1. If the first character of the command is neither a slash (\) nor dot (.), the shell searches for it in the list of shell builtins.If there exists a shell builtin by that name, the builtin is invoked.
+2. If the first character of the command is none of a slash (\), dot (.), nor builtin, hsh searches each element of the PATH  environmental variable for a directory containing an executable file by that name.
+3. If the first character of the command is a slash (\) or dot (.) or either of the above searches was successful, the shell executes the named program with any remaining arguments given in a separate execution environment.
+
+Exit Status
+hsh returns the exit status of the last command executed, unless a syntax error occurs, with zero indicating success and non-zero  indicatingfailure. All builtins return zero on success and one or two on incorrect usage (indicated by a corresponding error message).
+
+.B Signals
+.in +2n
+While running in interactive mode, \fBshellby\fR ignores the keyboard input \fBCtrl+c\fR.
+Alternatively, an input of end-of-file (\fBCtrl+d\fR) will exit the program.
+.in
+
+.TP
+.B Builtin commands
+
+.TP
+.BR env
+list all environment variables
+
+.TP
+.BR setenv " " [name] " " [value]
+sets the "name" environment variable with to value "value" or updates it if it already exists
+
+.TP
+.BR unsetenv " " [name]
+deletes the "name" environment variable from the enviroment variables
+
+.TP
+.BR cd " " [dir_path]
+changes the current working directory to "dir_path"
+
+.TP
+.BR Exit
+exit the shell
+
+.SH EXAMPLES
+.B Interactive
+       $ ./hsh
+       #(ಠ_ಠ)->$ /bin/ls
+       hsh main.c shell.c
+       #(ಠ_ಠ)->$
+       #(ಠ_ಠ)->$ exit
+       $
+
+
+.B Non Interactive
+       $ echo "/bin/ls" | ./hsh
+       hsh main.c shell.c test_ls_2
+       $
+       $ cat test_ls_2 | ./hsh
+       hsh main.c shell.c test_ls_2
+       hsh main.c shell.c test_ls_2
+       $
+
+-----------------------------------------------------------------------
 .SH AUTHORS
-Ramila Xalilova <xalilovaramila@yahoo.com>
-Aisha Aliyeva <aysalieva6@gmail.com>
-.SH VERSIONS
-.B hsh
-V1.0.0
+Aisha Alieva  \fI<https://github.com/aishalieva0>\fR
+.P
+Ramila Xalilova \fI <https://github.com/ramilaxalilova>\fR
+.P
+
