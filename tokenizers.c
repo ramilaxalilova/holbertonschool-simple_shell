@@ -18,6 +18,7 @@ char **hsh_tokenizer(char *input)
 	char **tokens = NULL, *token = NULL;
 	int buffer = BUFSIZE, newBuffer = 0, position = 0;
 	char **backup_tokens = NULL;
+
 	tokens = malloc(buffer * sizeof(char *));
 	if (tokens == NULL)
 	{
@@ -58,6 +59,7 @@ char **tokenizer_path(char *input)
 	int buffer = BUFSIZE, newBuffer = 0, position = 0;
 	char **tokens = NULL, *token = NULL;
 	char **backup_tokens = NULL;
+
 	tokens = malloc(buffer * sizeof(char *));
 	if (tokens == NULL)
 	{

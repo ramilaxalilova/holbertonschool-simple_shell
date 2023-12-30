@@ -12,7 +12,7 @@
 int hsh_cd(char **args, char *input_stdin, int *exit_status)
 {
 	int status;
-	char cwd[128]; 
+	char cwd[128];
 
 	getcwd(cwd, sizeof(cwd));
 
